@@ -15,5 +15,8 @@
   ],
   "author": "Aaron Sikes",
   "license": "MIT",
-  "readmeFilename": "README.md"
+  "readmeFilename": "README.md",
+  "dependencies": {
+    "xml2js": "~0.2.8"
+  }
 }

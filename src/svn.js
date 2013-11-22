@@ -13,3 +13,5 @@ SVN.prototype.get_remote = function get_remote(next){
 		next(null, result['Repository Root']);
 	})
 }
+
+SVN.prototype.log = require('./log.js');
