@@ -1,6 +1,6 @@
 {
   "name": "svn",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "SVN interface for js",
   "main": "src/svn.js",
   "scripts": {
