@@ -6,10 +6,8 @@ var parseString = require('xml2js').parseString;
 module.exports = function(options, next){
 	var command = ['svn', 'log', '--xml'];
 	options = options || {};
-	if (options.limit){
-		command.push('-l');
-		command.push(options.limit);
-	}
+	command = command.concat(limit(options));
+	command = command.concat(revision(options));
 	command = command.join(' ');
 	console.log('Command! "'+command+'"');
 
@@ -23,6 +21,22 @@ module.exports = function(options, next){
 	})
 }
 
+function limit(options){
+	if(options.limit) return ['-l', options.limit.toString()];
+	return [];
+}
+
+function revision(options){
+	if(options.revision) return ['-r', options.revision.toString()];
+	if(options.start || options.end){
+		var rev = [];
+		if(options.start) rev.push(options.start.toString());
+		if(options.start && options.end) rev.push(':');
+		if(options.end) rev.push(options.end.toString());
+		return ['-r', rev.join('')];
+	}
+	return [];
+}
 
 
 function convert_from_weird_xml_object_to_awesome_json(old){

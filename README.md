@@ -18,4 +18,11 @@ svn.log({limit: 5}, function(error, result){
     console.log(rev.message);
   });
 });
+
+svn.log({start: 4426, end:'HEAD'}, function(error, result){
+  console.log('Changes since revision 4426:');
+  result.forEach(function(rev){
+    console.log(rev.message);
+  });
+})
 ```
