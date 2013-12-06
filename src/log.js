@@ -28,12 +28,12 @@ function limit(options){
 
 function revision(options){
 	if(options.revision) return ['-r', options.revision.toString()];
-	if(options.start || options.end){
+	if(options.start){
 		var rev = [];
-		if(options.start) rev.push(options.start.toString());
-		if(options.start && options.end) rev.push(':');
-		if(options.end) rev.push(options.end.toString());
-		return ['-r', rev.join('')];
+        rev.push(options.start.toString());
+		rev.push(':');
+		rev.push(options.end ? options.end.toString() : 'HEAD');
+        return ['-r', rev.join('')];
 	}
 	return [];
 }
