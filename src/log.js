@@ -1,5 +1,6 @@
 var exec = require('child_process').exec;
 var parseString = require('xml2js').parseString;
+var Revision = require('./Revision.js');
 
 
 
@@ -15,7 +16,7 @@ module.exports = function(options, next){
 		if(error) return next(error);
 		parseString(stdout, function(error, result){
             if(error) return next(error);
-            result = convert_from_weird_xml_object_to_awesome_json(result);
+            result = result.log.logentry.map(Revision.from_xml);
             next(error, result);
 		})
 	})
@@ -36,20 +37,4 @@ function revision(options){
         return ['-r', rev.join('')];
 	}
 	return [];
-}
-
-
-function convert_from_weird_xml_object_to_awesome_json(old){
-    var logs = old.log.logentry.map(convert_single_log_entry);
-    return logs;
-
-    function convert_single_log_entry(old){
-        var pojo = {};
-        pojo.revision = parseInt(old.$.revision);
-        pojo.author = old.author[0];
-        pojo.date = new Date(old.date[0]);
-        pojo.message = old.msg[0];
-        return pojo;
-    }
-
 }
