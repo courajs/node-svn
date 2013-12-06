@@ -10,7 +10,6 @@ module.exports = function(options, next){
 	command = command.concat(limit(options));
 	command = command.concat(revision(options));
 	command = command.join(' ');
-	console.log('Command! "'+command+'"');
 
 	exec(command, {cwd: this.local}, function(error, stdout, stderr){
 		if(error) return next(error);
