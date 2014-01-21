@@ -9,6 +9,9 @@ module.exports = function(options, next){
 	options = options || {};
 	command = command.concat(limit(options));
 	command = command.concat(revision(options));
+	if (options.remote) {
+		command = command.concat([options.remote]);
+	}
 	command = command.join(' ');
 
 	exec(command, {cwd: this.local}, function(error, stdout, stderr){
