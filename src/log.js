@@ -11,6 +11,8 @@ module.exports = function(options, next){
 	command = command.concat(revision(options));
 	if (options.remote) {
 		command = command.concat([options.remote]);
+	} else if (this.remote) {
+		command = command.concat([this.remote]);
 	}
 	command = command.join(' ');
 
