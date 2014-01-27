@@ -22,4 +22,6 @@ SVN.prototype.info = function info(url, next){
 	})
 }
 
+SVN.prototype.externals = require('./externals.js');
+
 SVN.prototype.log = require('./log.js');
