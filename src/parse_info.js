@@ -9,7 +9,12 @@ module.exports = function parse_svn_info(local_repo, next){
 
 			if (error) return next(error);
 
-			out_lines = stdout.split('\n');
+			if (stdout.indexOf('\r\n') != -1) {
+				out_lines = stdout.split('\r\n');
+			} else {
+				out_lines = stdout.split('\n');
+			}
+
 			out_lines.forEach(function(line){
 				var match = extractor.exec(line);
 				if( match ){
