@@ -4,7 +4,7 @@ I got tired of all the spawn() calls needed to run our custom Continuous Integra
 Usage
 ------
 `npm install svn`
-```
+```js
 var SVN = require('svn');
 var svn = new SVN('./working_copy');
 
