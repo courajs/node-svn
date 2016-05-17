@@ -18,19 +18,19 @@ module.exports = function(options, next){
   }
 
   var child = spawn('svn', args, {cwd: this.local});
-  var stdout = "";
+  var stdout = '';
 
   child.stdout.on('data', function (data) {
     stdout += data;
   });
 
   child.stderr.on('data', function (data) {
-    console.log('stderr: ' + data);
+    console.log('svn error output: ' + data);
   });
 
   child.on('close', function (code) {
     if (code !== 0) {
-      console.log('ps process exited with code ' + code);
+      console.log('svn log exited with code ' + code);
     } else {
       parseString(stdout, function(error, result){
         if(error) return next(error);
@@ -40,7 +40,7 @@ module.exports = function(options, next){
     }
   });
 
-}
+};
 
 function limit(options){
   if(options.limit) return ['-l', options.limit.toString()];
