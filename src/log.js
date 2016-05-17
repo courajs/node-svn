@@ -1,44 +1,60 @@
-var exec = require('child_process').exec;
+var spawn = require('child_process').spawn;
 var parseString = require('xml2js').parseString;
 var Revision = require('./Revision.js');
 
 
 
 module.exports = function(options, next){
-	var command = ['svn', 'log', '--xml'];
-	options = options || {};
-	command = command.concat(limit(options));
-	command = command.concat(revision(options));
-	if (options.remote) {
-		command = command.concat([options.remote]);
-	} else if (this.remote) {
-		command = command.concat([this.remote]);
-	}
-	command = command.join(' ');
+  var args = ['log', '--xml'];
+  options = options || {};
+  args = args.concat(limit(options));
+  args = args.concat(revision(options));
+  // -- diff not supported in xml mode command = command.concat(['--diff']);
+  args = args.concat(['-v']);
+  if (options.remote) {
+    args = args.concat([options.remote]);
+  } else if (this.remote) {
+    args = args.concat([this.remote]);
+  }
 
-	exec(command, {cwd: this.local}, function(error, stdout, stderr){
-		if(error) return next(error);
-		parseString(stdout, function(error, result){
-            if(error) return next(error);
-            result = result.log.logentry.map(Revision.from_xml);
-            next(error, result);
-		})
-	})
-}
+  var child = spawn('svn', args, {cwd: this.local});
+  var stdout = '';
+
+  child.stdout.on('data', function (data) {
+    stdout += data;
+  });
+
+  child.stderr.on('data', function (data) {
+    console.log('svn error output: ' + data);
+  });
+
+  child.on('close', function (code) {
+    if (code !== 0) {
+      console.log('svn log exited with code ' + code);
+    } else {
+      parseString(stdout, function(error, result){
+        if(error) return next(error);
+        result = result.log.logentry.map(Revision.from_xml);
+        next(error, result);
+      });
+    }
+  });
+
+};
 
 function limit(options){
-	if(options.limit) return ['-l', options.limit.toString()];
-	return [];
+  if(options.limit) return ['-l', options.limit.toString()];
+  return [];
 }
 
 function revision(options){
-	if(options.revision) return ['-r', options.revision.toString()];
-	if(options.start){
-		var rev = [];
-        rev.push(options.start.toString());
-		rev.push(':');
-		rev.push(options.end ? options.end.toString() : 'HEAD');
-        return ['-r', rev.join('')];
-	}
-	return [];
+  if(options.revision) return ['-r', options.revision.toString()];
+  if(options.start){
+    var rev = [];
+    rev.push(options.start.toString());
+    rev.push(':');
+    rev.push(options.end ? options.end.toString() : 'HEAD');
+    return ['-r', rev.join('')];
+  }
+  return [];
 }
