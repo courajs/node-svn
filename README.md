@@ -24,5 +24,10 @@ svn.log({start: 4426, end:'HEAD'}, function(error, result){
   result.forEach(function(rev){
     console.log(rev.message);
   });
-})
+});
+
+svn.update(4426, function(error, result){
+	console.log(result);
+});
+	
 ```
