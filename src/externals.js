@@ -40,9 +40,9 @@ module.exports.set = function(options, next){
   options = options || {};
   command = command.concat([this.local ? this.local : "."]);
   command = command.concat(['-F', options.file]);
-  command = command.join(' ');
+  command = command.join(' ').split(' ');
 
-  exec(command, {}, function(error, stdout, stderr){
+  exec(command[0], command.slice(1), {}, function(error, stdout, stderr){
     return next(error);
   })
 };
