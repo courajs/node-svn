@@ -1,4 +1,4 @@
-var exec = require('child_process').exec;
+var exec = require('child_process').execFile;
 var parseString = require('xml2js').parseString;
 
 module.exports.get = function(options, next){
@@ -9,9 +9,9 @@ module.exports.get = function(options, next){
   } else if (this.remote) {
     command = command.concat([this.remote]);
   }
-  command = command.join(' ');
+  command = command.join(' ').split(' ');
 
-  exec(command, {}, function(error, stdout, stderr){
+  exec(command[0], command.slice(1), {}, function(error, stdout, stderr){
     if(error) return next(error);
 
     parseString(stdout, function(error, result){
