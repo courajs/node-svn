@@ -1,7 +1,9 @@
-var exec = require('child_process').exec;
+var exec = require('child_process').execFile;
 
 module.exports = function parse_svn_info(local_repo, next){
-  var info_call = exec('svn info ' + local_repo,
+  var cmd = 'svn info ' + local_repo;
+  cmd = cmd.split(' ');
+  var info_call = exec(cmd[0], cmd.slice(1),
     function(error, stdout, stderr){
       var out_lines;
       var extractor = /^(.*): (.*)$/;
