@@ -19,18 +19,19 @@ module.exports = function(options, next){
 
   var child = spawn('svn', args, {cwd: this.local});
   var stdout = '';
+   var stderr = '';
 
   child.stdout.on('data', function (data) {
     stdout += data;
   });
 
   child.stderr.on('data', function (data) {
-    console.log('svn error output: ' + data);
+    stderr += data;
   });
 
   child.on('close', function (code) {
     if (code !== 0) {
-      console.log('svn log exited with code ' + code);
+      next(stderr, null);
     } else {
       parseString(stdout, function(error, result){
         if(error) return next(error);
