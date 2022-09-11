@@ -1,6 +1,9 @@
 SVN Handles for node.
 I got tired of all the spawn() calls needed to run our custom Continuous Integration server.
 
+This simply spawns processes using the svn cli, so `svn` must be installed and available via
+the `PATH` of the Node.js process.
+
 Usage
 ------
 `npm install svn`
